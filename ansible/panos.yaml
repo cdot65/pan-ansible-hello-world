@@ -1,0 +1,27 @@
+---
+# HELLO WORLD FOR PAN-OS FIREWALLS
+- hosts: firewalls
+  connection: local
+  gather_facts: False
+  become: False
+  collections:
+    - paloaltonetworks.panos
+    - ansible.utils
+
+  tasks:
+    - name: "Run commmand 'show interfaces' on firewalls running PAN-OS."
+      paloaltonetworks.panos.panos_op:
+        provider:
+          ip_address: "{{ ansible_host }}"
+          username: "ansible"
+          password: "paloalto123"
+        cmd: "show interface all"
+      register: result
+
+    - name: "Convert XML response to Python dictionary with xmltodict"
+      set_fact:
+        interfaces: "{{ result['stdout_xml'] | ansible.utils.from_xml('xmltodict') }}"
+
+    - name: "Print interface output to the console as JSON"
+      debug:
+        msg: "{{ interfaces['response']['result']['hw']['entry'] }}"
