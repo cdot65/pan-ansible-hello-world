@@ -1,0 +1,12 @@
+all:
+  children:
+    firewalls:
+      hosts:
+        firewall1.redtail.com:
+          ansible_host: "192.168.1.1"
+        firewall2.redtail.com:
+          ansible_host: "192.168.1.2"
+    panorama:
+      hosts:
+        panorama.redtail.com:
+          ansible_host: "192.168.1.10"
